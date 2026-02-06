@@ -1,0 +1,1 @@
+uv --project /home/jricm/workspace/jricm/twin-file-detective/ run /home/jricm/workspace/jricm/twin-file-detective/main.py

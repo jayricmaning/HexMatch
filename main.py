@@ -1,5 +1,5 @@
 import os
-from functions import walk_dir, find_duplicate
+from functions import walk_dir, find_duplicate, display_duplicates
 
 def main():
     print("🚀 Starting Twin-File Detective...")
@@ -8,6 +8,7 @@ def main():
 
     if twins:
         print(f"\n Done! Found {len(twins)} sets of duplicate files!")
+        display_duplicates(twins)
     if twins is None:
         print(f"\n No duplicates found")
 

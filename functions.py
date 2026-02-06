@@ -31,10 +31,18 @@ def find_duplicate(hash_map):
     for file_hash, paths in hash_map.items():
         if len(paths) > 1:
             duplicates[file_hash] = paths
-    print(f"found duplicates {duplicates}")
     return duplicates
     
-    
+
+def display_duplicates(duplicates):
+    for key,value in duplicates.items():
+        file_name = []
+        for item in value:
+            split_item = item.split('/')
+            file_name.append(split_item[-1])
+        print(file_name)
+    return duplicates
+
 
     
 
