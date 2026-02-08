@@ -18,6 +18,8 @@ def walk_dir():
     hash_map = defaultdict(list)
     for root, dirs, files in os.walk(target_path): 
         for file in files:
+            if ":" in file:
+                continue
             file_path = os.path.join(root, file)
             file_hash = hash_generator(file_path)
 
@@ -35,16 +37,28 @@ def find_duplicate(hash_map):
     
 
 def display_duplicates(duplicates):
+    number = 0
     for key,value in duplicates.items():
         file_name = []
+        number += 1
         for item in value:
-            split_item = item.split('/')
-            file_name.append(split_item[-1])
-        print(file_name)
+            file_name.append(os.path.basename(item))   
+ #           split_item = item.split('/')
+ #           file_name.append(split_item[-1])    
+        print(f"  {number}. {file_name[0]} ({len(file_name)} duplicates)")
     return duplicates
 
 
-    
+def grab_duplicates(duplicates):
+    duplicate_files = []
+    for key,value in duplicates.items():
+        for path in value[1:]:
+            duplicate_files.append(path)
+#       print(duplicate_files)
+    return duplicate_files
 
 
-
+def select_duplicates(duplicate_files, selection):
+    selected = []
+    for item in range(0, len(selection)):
+        selected.append(duplicate_files[selection+1])
