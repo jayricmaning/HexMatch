@@ -50,6 +50,7 @@ def display_duplicates(duplicates):
 
 
 def grab_duplicates(duplicates):
+    #return a list of copies of a file exept the original file
     duplicate_files = []
     for key,value in duplicates.items():
         for path in value[1:]:
@@ -58,7 +59,17 @@ def grab_duplicates(duplicates):
     return duplicate_files
 
 
-def select_duplicates(duplicate_files, selection):
+def select_duplicates(duplicate_files, selected_item):
+    #return a list of selected items from the duplicate_files list
     selected = []
-    for item in range(0, len(selection)):
-        selected.append(duplicate_files[selection+1])
+    for number in selected_item:
+        index = number - 1
+        if 0 <= index < len(duplicate_files):
+            selected.append(duplicate_files[index])
+        else:    
+            print(f"Skipping {number}: no such file exists!")
+    return selected
+
+def delete_duplicates(selected=[]):
+    #just testing out a print to check if things work..i'll write the real function later
+    print(f"the following files has been removed: {selected}")

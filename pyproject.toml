@@ -1,3 +1,8 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
 [project]
 name = "twin-file-detective"
 version = "0.1.0"
@@ -7,3 +12,6 @@ requires-python = ">=3.13"
 dependencies = [
     "xxhash>=3.6.0",
 ]
+
+[project.scripts]
+twin-file-detective = "main:main"
