@@ -1,6 +1,6 @@
 import os
 import argparse
-from .functions import (walk_dir, 
+from twin_file_detective.functions import (walk_dir, 
                        find_duplicate, 
                        display_duplicates, 
                        grab_duplicates,
