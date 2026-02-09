@@ -13,5 +13,8 @@ dependencies = [
     "xxhash>=3.6.0",
 ]
 
+[tool.setuptools]
+py-modules = ["main", "functions"]
+
 [project.scripts]
 twin-file-detective = "main:main"
