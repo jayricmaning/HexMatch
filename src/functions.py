@@ -23,7 +23,7 @@ def walk_dir():
     }
 
     for root, dirs, files in os.walk(target_path): 
-        dir[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
+        dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
         for file in files:
             if ":" in file:
                 continue
@@ -92,4 +92,4 @@ def delete_duplicates(selected_files):
             print(f"Permanently Deleted: {os.path.basename(file)}")
 
         except (PermissionError, OSError) as e:
-            print(f"Skip: Could not delete {os.path.basename(path)}. (Error: {e})")
+            print(f"Skip: Could not delete {os.path.basename(file)}. (Error: {e})")
