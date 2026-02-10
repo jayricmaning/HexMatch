@@ -16,21 +16,29 @@ def compare_file_size(file_paths):
 
 def hash_generator(size_map):
     hashes_to_files = defaultdict(list)
+    chunk_size = 65536  # 64KB
+
     for path_list in size_map.values():
         for path in path_list:
-            counter = 0
             h = xxhash.xxh3_64()
-            try:         
+            try:
+                file_size = os.path.getsize(path)
                 with open(path, 'rb') as f:
-                    # 131072 (128KB) is the buffer size for efficient sequential disk reads
-                    while chunk := f.read(131072):
-                        h.update(chunk)
+                    #Read the Head (First 64KB)
+                    h.update(f.read(chunk_size))
+                    
+                    #Read the Tail (Last 64KB)
+                    if file_size > chunk_size:
+                        f.seek(-chunk_size, os.SEEK_END)
+                        h.update(f.read(chunk_size))
+                
                 file_hash = h.hexdigest()
                 hashes_to_files[file_hash].append(path)
 
             except (OSError, PermissionError) as e:
                 print(f"Skipping {os.path.basename(path)}: {e}")
-
+                continue
+                
     return {h: paths for h, paths in hashes_to_files.items() if len(paths) > 1}
     
 def walk_dir():
