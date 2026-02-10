@@ -1,13 +1,12 @@
 markdown
 # HexMatch 🔍
 
-**HexMatch** is a professional-grade command-line utility for identifying and managing duplicate files. By utilizing 64-bit cryptographic hashing (**xxHash**), it ensures 100% data accuracy—detecting "identical twins" even if they have different filenames.
+**HexMatch** is command-line utility for identifying and managing duplicate files. By utilizing 64-bit cryptographic hashing (**xxHash**), it ensures high data accuracy—detecting "identical twins" even if they have different filenames.
 
 ## ✨ Key Features
 - **Data-First Matching:** Uses file content (Hex hashes), not just names, to find duplicates.
-- **Safety First:** Moves files to the native Trash/Recycle Bin so you can recover them if needed.
-- **Pro Command Line:** Built with mutually exclusive flag groups to prevent conflicting actions.
-- **Developer Ready:** Fully packaged with `pyproject.toml` for easy global installation.
+- **Safety First:** Option to move files to the native Trash/Recycle Bin so you can recover them if needed.
+- **Command Line Ready:** Built with mutually exclusive flag groups to prevent conflicting actions.
 
 ## 🚀 Installation
 
@@ -17,7 +16,7 @@ Ensure you have Python 3.10+ installed. To install HexMatch globally on your sys
 git clone https://github.com
 cd hexmatch
 pip install .
-Use code with caution.
+Use code with caution. To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
 
 🛠 How to Use
 HexMatch uses a Selection + Action logic. You must pick what to target and how to handle it.
