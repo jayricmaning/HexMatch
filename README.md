@@ -12,7 +12,7 @@ markdown
 
 Ensure you have Python 3.10+ installed. To install HexMatch globally on your system:
 
-```bash
+
 git clone https://github.com
 cd hexmatch
 pip install .
