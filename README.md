@@ -1,28 +1,52 @@
-# 🔍 twin-hunt
+markdown
+# HexMatch 🔍
 
-A lightweight, terminal-based duplicate file finder built with Python. This tool scans any Windows directory (via WSL2 or native Python) and identifies identical files based on their digital fingerprint (SHA-256), ignoring filenames.
+**HexMatch** is a professional-grade command-line utility for identifying and managing duplicate files. By utilizing 64-bit cryptographic hashing (**xxHash**), it ensures 100% data accuracy—detecting "identical twins" even if they have different filenames.
 
-## 🚀 Features
-- **Deep Scan:** Uses SHA-256 hashing to find true duplicates, even if they have different names.
-- **Memory Efficient:** Reads large files (videos/high-res photos) in small chunks to prevent RAM spikes.
-- **Windows Optimized:** Designed to be called from the Windows Terminal to scan NTFS drives via WSL2.
-- **Safety First:** Includes a "Dry Run" mode and user confirmation before any file operations.
+## ✨ Key Features
+- **Data-First Matching:** Uses file content (Hex hashes), not just names, to find duplicates.
+- **Safety First:** Moves files to the native Trash/Recycle Bin so you can recover them if needed.
+- **Pro Command Line:** Built with mutually exclusive flag groups to prevent conflicting actions.
+- **Developer Ready:** Fully packaged with `pyproject.toml` for easy global installation.
 
-## 🛠️ How it Works
-1. **Walks** through the target directory and all subfolders.
-2. **Filters** files to find potential matches.
-3. **Hashes** file contents to generate a unique "fingerprint."
-4. **Groups** files with identical hashes into a dictionary.
-5. **Reports** all "twins" found and offers to clean them up.
+## 🚀 Installation
 
-## 📦 Requirements
-- Python 3.x
-- No external libraries required (uses built-in `os`, `hashlib`, and `collections`).
-- *Optional:* `send2trash` if you prefer moving files to the Recycle Bin instead of permanent deletion.
+Ensure you have Python 3.10+ installed. To install HexMatch globally on your system:
 
-## 💻 Usage
+```bash
+git clone https://github.com
+cd hexmatch
+pip install .
+Use code with caution.
 
-### Running via WSL2
-To scan your Windows "Memos" folder from a Windows Terminal:
-```powershell
-wsl python3 /path/to/functions.py "C:\.Memos\MakeUseOf\Models"
+🛠 How to Use
+HexMatch uses a Selection + Action logic. You must pick what to target and how to handle it.
+1. Scan and Review
+See exactly what duplicates exist before taking action.
+bash
+hexmatch --scan
+Use code with caution.
+
+2. Move All to Trash
+The safest way to clean your drive. Moves every redundant copy to the Recycle Bin.
+bash
+hexmatch --all --remove
+Use code with caution.
+
+3. Selective Permanent Deletion 
+Target specific files (by the numbers shown in --scan) for immediate, permanent removal.
+bash
+hexmatch --select 1 3 5 --delete
+Use code with caution.
+
+📖 Command Options
+Flag	Long Name	Description
+-sc	--scan	Scans the directory and displays found duplicates.
+-a	--all	Targets all redundant copies found.
+-s	--select	Targets specific files by index (e.g., -s 1 4).
+-r	--remove	Action: Sends targeted files to the Trash/Recycle Bin.
+-d	--delete	Action: Permanently deletes targeted files (caution!).
+🛡 License
+Distributed under the MIT License. See LICENSE for more information.
+
+
