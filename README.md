@@ -1,4 +1,4 @@
-markdown
+
 # HexMatch 🔍
 
 **HexMatch** is command-line utility for identifying and managing duplicate files. By utilizing 64-bit cryptographic hashing (**xxHash**), it ensures high data accuracy—detecting "identical twins" even if they have different filenames.
