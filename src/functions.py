@@ -37,9 +37,12 @@ def walk_dir():
 
 def find_duplicate(hash_map):
     duplicates = {}
+    counter = 0
     for file_hash, paths in hash_map.items():
         if len(paths) > 1:
             duplicates[file_hash] = paths
+            print(f"{counter} {paths}")
+            counter += 1
     return duplicates
     
 
