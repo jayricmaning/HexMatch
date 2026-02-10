@@ -17,6 +17,7 @@ def hash_generator(file_path):
 def walk_dir():
     target_path = os.getcwd()
     hash_map = defaultdict(list)
+    dupe_counter = 0
     skip_list = {
         'Windows', '$Recycle.Bin', 'System Volume Information', #skip these directories
         '.git', 'node_modules', '__pycache__', '.vscode'       
@@ -24,25 +25,29 @@ def walk_dir():
 
     for root, dirs, files in os.walk(target_path): 
         dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
-        for file in files:
-            if ":" in file:
+        counter = 0
+        for f in files:
+            if ":" in f:
                 continue
-            file_path = os.path.join(root, file)
+            file_path = os.path.join(root, f)
             file_hash = hash_generator(file_path)
 
             if file_hash:
+                if file_hash in hash_map:
+                    dupe_counter += 1
+                    original_path = hash_map[file_hash][0]
+                    print(f"[{dupe_counter}] Twin Found!")
+                    print(f"    New: {f}")
+                    print(f"    Original: {os.path.basename(original_path)}")
                 hash_map[file_hash].append(file_path)
-    
+            
     return hash_map
 
 def find_duplicate(hash_map):
     duplicates = {}
-    counter = 0
     for file_hash, paths in hash_map.items():
         if len(paths) > 1:
             duplicates[file_hash] = paths
-            print(f"{counter} {paths}")
-            counter += 1
     return duplicates
     
 
