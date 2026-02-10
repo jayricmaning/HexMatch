@@ -5,7 +5,8 @@ from functions import (walk_dir,
                        grab_duplicates,
                        select_duplicates,
                        trash_duplicates,
-                       delete_duplicates)
+                       delete_duplicates,
+                       )
 
 def main():
     print("Starting Twin-File Detective...")

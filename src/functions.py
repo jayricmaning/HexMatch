@@ -1,20 +1,36 @@
 import os
-import xxhash
+import xxhash 
 from send2trash import send2trash
 from collections import defaultdict
 
+def compare_file_size(file_paths):
+    size_map = defaultdict(list)
+    for path in file_paths:
+        try: 
+            size = os.path.getsize(path)
+            size_map[size].append(path)
+        except (OSError, PermissionError):
+            continue
 
-def hash_generator(file_path):
-    h = xxhash.xxh3_64()
-    try:
-        with open(file_path, 'rb') as f:
-            while chunk := f.read(131072):
-                h.update(chunk)
-        return h.hexdigest()
-    except (OSError, PermissionError) as e:
-        print(f"Skipping {os.path.basename(file_path)}: {e}")
-        return None    
+    return {size: paths for size, paths in size_map.items() if len(paths) > 1}
 
+def hash_generator(size_map):
+    hashes_to_files = defaultdict(list)
+    for path_list in size_map.values():
+        for path in path_list:
+            h = xxhash.xxh3_64()
+            try:         
+                with open(path, 'rb') as f:
+                    # 131072 (128KB) is the buffer size for efficient sequential disk reads
+                    while chunk := f.read(131072):
+                        h.update(chunk)
+                file_hash = h.hexdigest()
+                hashes_to_files[file_hash].append(path)
+
+            except (OSError, PermissionError) as e:
+                print(f"Skipping {os.path.basename(path)}: {e}")
+
+    return {h: paths for h, paths in hashes_to_files.items() if len(paths) > 1}
     
 def walk_dir():
     target_path = os.getcwd()
@@ -27,12 +43,11 @@ def walk_dir():
 
     for root, dirs, files in os.walk(target_path): 
         dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
-        counter = 0
         for f in files:
             if ":" in f:
                 continue
-            file_path = os.path.join(root, f)
-            file_hash = hash_generator(file_path)
+            file_paths = os.path.join(root, f)
+            file_hash = hash_generator(file_paths)
 
             if file_hash:
                 if file_hash in hash_map:
@@ -41,7 +56,7 @@ def walk_dir():
                     print(f"[{dupe_counter}] Twin Found!")
                     print(f"    New: {f}")
                     print(f"    Original: {os.path.basename(original_path)}")
-                hash_map[file_hash].append(file_path)
+                hash_map[file_hash].append(file_paths)
             
     return hash_map
 
@@ -55,7 +70,7 @@ def find_duplicate(hash_map):
 
 def display_duplicates(duplicates):
     number = 0
-    for key,value in duplicates.items():
+    for value in duplicates.values():
         file_name = []
         number += 1
         for item in value:
@@ -72,7 +87,6 @@ def grab_duplicates(duplicates):
     for key,value in duplicates.items():
         for path in value[1:]:
             duplicate_files.append(path)
-#       print(duplicate_files)
     return duplicate_files
 
 
