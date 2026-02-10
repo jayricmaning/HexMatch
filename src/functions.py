@@ -3,16 +3,18 @@ import xxhash
 from send2trash import send2trash
 from collections import defaultdict
 
+
 def hash_generator(file_path):
     h = xxhash.xxh3_64()
-
     try:
-        with open(file_path, "rb") as f:
+        with open(file_path, 'rb') as f:
             while chunk := f.read(131072):
                 h.update(chunk)
         return h.hexdigest()
-    except (PermissionError, EOFError):
-        return None
+    except (OSError, PermissionError) as e:
+        print(f"Skipping {os.path.basename(file_path)}: {e}")
+        return None    
+
     
 def walk_dir():
     target_path = os.getcwd()
