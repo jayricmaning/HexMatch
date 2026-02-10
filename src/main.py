@@ -1,4 +1,3 @@
-import os
 import argparse
 from functions import (walk_dir, 
                        find_duplicate, 

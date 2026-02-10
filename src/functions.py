@@ -84,3 +84,12 @@ def trash_duplicates(selected=[]):
             print(f"Sucessfully moved to trash: {file}")
     except Exception as e:
         print(f"Could not delete {file}. Error: {e}")
+
+def delete_duplicates(selected_files):
+    for file in selected_files:
+        try:
+            os.remove(file)
+            print(f"Permanently Deleted: {os.path.basename(file)}")
+
+        except (PermissionError, OSError) as e:
+            print(f"Skip: Could not delete {os.path.basename(path)}. (Error: {e})")
