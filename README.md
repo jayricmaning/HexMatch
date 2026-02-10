@@ -17,6 +17,7 @@ git clone https://github.com
 cd hexmatch
 pip install .
 ```
+markdown
 Use code with caution. To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
 
 ##🛠 How to Use
