@@ -33,7 +33,7 @@ The safest way to clean your drive. Moves every redundant copy to the Recycle Bi
 hexmatch --all --remove
 ```
 
-## 3. Selective Permanent Deletion 
+### 3. Selective Permanent Deletion 
 Target specific files (by the numbers shown in --scan) for immediate, permanent removal.
 ```bash
 hexmatch --select 1 3 5 --delete
@@ -49,7 +49,8 @@ hexmatch --select 1 3 5 --delete
 | `-r` | `--remove` | **Action:** Sends targeted files to the Trash/Recycle Bin. |
 | `-d` | `--delete` | **Action:** Permanently deletes targeted files (caution!). |
 
-🛡 License
+
+## 🛡 License
 Distributed under the MIT License. See LICENSE for more information.
 
 
