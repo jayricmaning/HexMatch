@@ -1,6 +1,6 @@
 import os
 import xxhash
-import send2trash
+from send2trash import send2trash
 from collections import defaultdict
 
 def hash_generator(file_path):
