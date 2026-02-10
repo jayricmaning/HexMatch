@@ -10,14 +10,14 @@ markdown
 
 ## 🚀 Installation
 
-Ensure you have Python 3.10+ installed. To install HexMatch globally on your system:
+Ensure you have Python 3.10+ and git installed. To install HexMatch globally on your system:
 
 ```bash
 git clone https://github.com
 cd hexmatch
 pip install .
 ```
-Use code with caution. To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
+To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
 
 ## 🛠 How to Use
 HexMatch uses a Selection + Action logic. You must pick what to target and how to handle it.
