@@ -11,13 +11,19 @@ def hash_generator(file_path):
             while chunk := f.read(131072):
                 h.update(chunk)
         return h.hexdigest()
-    except EOFError:
+    except (PermissionError, EOFError):
         return None
     
 def walk_dir():
     target_path = os.getcwd()
     hash_map = defaultdict(list)
+    skip_list = {
+        'Windows', '$Recycle.Bin', 'System Volume Information', #skip these directories
+        '.git', 'node_modules', '__pycache__', '.vscode'       
+    }
+
     for root, dirs, files in os.walk(target_path): 
+        dir[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
         for file in files:
             if ":" in file:
                 continue
