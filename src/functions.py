@@ -21,8 +21,8 @@ def walk_dir():
     hash_map = defaultdict(list)
     dupe_counter = 0
     skip_list = {
-        'Windows', '$Recycle.Bin', 'System Volume Information', #skip these directories
-        '.git', 'node_modules', '__pycache__', '.vscode'       
+        'Windows', '$Recycle.Bin', 'System Volume Information', 'ProgramData', 'Program Files', 'Program Files (x86)', 'System',
+         'Riot Games', 'XboxGames', '.git', 'node_modules', '__pycache__', '.vscode'       
     }
 
     for root, dirs, files in os.walk(target_path): 
