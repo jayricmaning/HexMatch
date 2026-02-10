@@ -34,8 +34,8 @@ def hash_generator(size_map):
     
 def walk_dir():
     target_path = os.getcwd()
-    hash_map = defaultdict(list)
-    dupe_counter = 0
+    all_file_paths = []
+
     skip_list = {
         'Windows', '$Recycle.Bin', 'System Volume Information', 'ProgramData', 'Program Files', 'Program Files (x86)', 'System',
          'Riot Games', 'XboxGames', '.git', 'node_modules', '__pycache__', '.vscode'       
@@ -46,18 +46,16 @@ def walk_dir():
         for f in files:
             if ":" in f:
                 continue
-            file_paths = os.path.join(root, f)
-            file_hash = hash_generator(file_paths)
-
-            if file_hash:
-                if file_hash in hash_map:
-                    dupe_counter += 1
-                    original_path = hash_map[file_hash][0]
-                    print(f"[{dupe_counter}] Twin Found!")
-                    print(f"    New: {f}")
-                    print(f"    Original: {os.path.basename(original_path)}")
-                hash_map[file_hash].append(file_paths)
-            
+            full_path = os.path.join(root, f)
+            all_file_paths.append(full_path)
+        
+    size_map = compare_file_size(all_file_paths)
+    if not size_map:
+        print("No potential duplicates found based on file size.")
+        return {}
+    print(f"Checking content for {len(size_map)} groups of same-sized files...")
+    hash_map = hash_generator(size_map)
+                
     return hash_map
 
 def find_duplicate(hash_map):
