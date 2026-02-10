@@ -17,36 +17,38 @@ git clone https://github.com
 cd hexmatch
 pip install .
 ```
-markdown
 Use code with caution. To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
 
-##🛠 How to Use
+## 🛠 How to Use
 HexMatch uses a Selection + Action logic. You must pick what to target and how to handle it.
-1. Scan and Review
+### 1. Scan and Review
 See exactly what duplicates exist before taking action.
-bash
+```bash
 hexmatch --scan
-Use code with caution.
+```
 
-2. Move All to Trash
+### 2. Move All to Trash
 The safest way to clean your drive. Moves every redundant copy to the Recycle Bin.
-bash
+```bash
 hexmatch --all --remove
-Use code with caution.
+```
 
-3. Selective Permanent Deletion 
+## 3. Selective Permanent Deletion 
 Target specific files (by the numbers shown in --scan) for immediate, permanent removal.
-bash
+```bash
 hexmatch --select 1 3 5 --delete
-Use code with caution.
+```
 
-📖 Command Options
-Flag	Long Name	Description
--sc	--scan	Scans the directory and displays found duplicates.
--a	--all	Targets all redundant copies found.
--s	--select	Targets specific files by index (e.g., -s 1 4).
--r	--remove	Action: Sends targeted files to the Trash/Recycle Bin.
--d	--delete	Action: Permanently deletes targeted files (caution!).
+## 📖 Command Options
+
+| Flag | Long Name | Description |
+| :--- | :--- | :--- |
+| `-sc` | `--scan` | Scans the directory and displays found duplicates. |
+| `-a` | `--all` | Targets **all** redundant copies found. |
+| `-s` | `--select` | Targets specific files by index (e.g., `-s 1 4`). |
+| `-r` | `--remove` | **Action:** Sends targeted files to the Trash/Recycle Bin. |
+| `-d` | `--delete` | **Action:** Permanently deletes targeted files (caution!). |
+
 🛡 License
 Distributed under the MIT License. See LICENSE for more information.
 
