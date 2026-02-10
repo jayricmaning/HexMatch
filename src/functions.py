@@ -18,6 +18,7 @@ def hash_generator(size_map):
     hashes_to_files = defaultdict(list)
     for path_list in size_map.values():
         for path in path_list:
+            counter = 0
             h = xxhash.xxh3_64()
             try:         
                 with open(path, 'rb') as f:
@@ -37,25 +38,42 @@ def walk_dir():
     all_file_paths = []
 
     skip_list = {
-        'Windows', '$Recycle.Bin', 'System Volume Information', 'ProgramData', 'Program Files', 'Program Files (x86)', 'System',
-         'Riot Games', 'XboxGames', '.git', 'node_modules', '__pycache__', '.vscode'       
+        "Windows",
+        "$Recycle.Bin",
+        "System Volume Information",
+        "ProgramData",
+        "Program Files",
+        "Program Files (x86)",
+        "System",
+        "Riot Games",
+        "XboxGames",
+        ".git",
+        "node_modules",
+        "__pycache__",
+        ".vscode",
     }
 
-    for root, dirs, files in os.walk(target_path): 
-        dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith('.')]
+    for root, dirs, files in os.walk(target_path):
+        dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith(".")]
+
         for f in files:
             if ":" in f:
                 continue
             full_path = os.path.join(root, f)
             all_file_paths.append(full_path)
-        
+            print(f"\rCollected {len(all_file_paths)} files...", end="")
+
+    print("\nFiltering by size...")
     size_map = compare_file_size(all_file_paths)
     if not size_map:
         print("No potential duplicates found based on file size.")
         return {}
-    print(f"Checking content for {len(size_map)} groups of same-sized files...")
+    print(f"Hashing {len(size_map)} groups of same-sized files...")
     hash_map = hash_generator(size_map)
-                
+
+    dupe_count = sum(len(paths) - 1 for paths in hash_map.values())
+    print(f"Done! Found {dupe_count} duplicate files.")
+
     return hash_map
 
 def find_duplicate(hash_map):
