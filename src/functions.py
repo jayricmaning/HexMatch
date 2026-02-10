@@ -1,5 +1,6 @@
 import os
 import xxhash
+import send2trash
 from collections import defaultdict
 
 def hash_generator(file_path):
@@ -70,6 +71,10 @@ def select_duplicates(duplicate_files, selected_item):
             print(f"Skipping {number}: no such file exists!")
     return selected
 
-def delete_duplicates(selected=[]):
-    #just testing out a print to check if things work..i'll write the real function later
-    print(f"the following files has been removed: {selected}")
+def trash_duplicates(selected=[]):
+    try:
+        for file in selected:
+            send2trash(file)
+            print(f"Sucessfully moved to trash: {file}")
+    except Exception as e:
+        print(f"Could not delete {file}. Error: {e}")

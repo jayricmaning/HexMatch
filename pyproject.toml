@@ -3,12 +3,13 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "twin-file-detective"
-version = "0.1.0"
-description = "A tool for finding and deleting copies of files"
+name = "hexmatch"
+version = "1.0.0"
+description = "A tool for finding copies of files using its hex values"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "send2trash>=2.1.0",
     "xxhash>=3.0.0",
 ]
 
@@ -17,4 +18,4 @@ package-dir = {"" = "src"}
 py-modules = ["main", "functions"]
 
 [project.scripts]
-twin-file-detective = "main:main"
+hexmatch = "main:main"
