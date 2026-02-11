@@ -1,56 +1,68 @@
+# HexMatch 🕵️‍♂️
+HexMatch is a lightweight Python CLI tool designed to hunt down and eliminate duplicate files efficiently. It uses a smart hashing strategy (Head + Tail hashing) to quickly identify identical files without reading every single byte of large files.
 
-# HexMatch 🔍
+## 🚀 Features
 
-**HexMatch** is command-line utility for identifying and managing duplicate files. By utilizing 64-bit cryptographic hashing (**xxHash**), it ensures high data accuracy—detecting "identical twins" even if they have different filenames.
+Fast Scanning: Uses xxhash for high-speed performance.
+Smart Hashing: Checks file sizes first, then hashes only the first and last 64KB to verify identity.
+Safe Deletion: Supports moving files to the Trash/Recycle Bin using send2trash or permanent deletion.
+System Protection: Automatically skips sensitive system directories and common development folders (like .git and node_modules).
 
-## ✨ Key Features
-- **Data-First Matching:** Uses file content (Hex hashes), not just names, to find duplicates.
-- **Safety First:** Option to move files to the native Trash/Recycle Bin so you can recover them if needed.
-- **Command Line Ready:** Built with mutually exclusive flag groups to prevent conflicting actions.
 
-## 🚀 Installation
-
-Ensure you have Python 3.10+ and git installed. To install HexMatch globally on your system:
-
+## 🛠️ Installation
+Clone the repository:
 ```bash
-git clone https://github.com
-cd hexmatch
+git clone <repo>
+cd HexMatch
 pip install .
 ```
-To save on processing time, HexMatch is configured to only compare the initial 128KB of each file. While this provides near-instant results, there is a theoretical (though extremely low) risk of a false positive if two different files share identical headers. I recommend using the -r (--remove) over -d (--delete) option for important files. 
 
-## 🛠 How to Use
-HexMatch uses a Selection + Action logic. You must pick what to target and how to handle it.
-### 1. Scan and Review
-See exactly what duplicates exist before taking action.
+Install dependencies:
+This tool requires xxhash for hashing and send2trash for safe file removal.
+
 ```bash
-hexmatch --scan
+pip install .
+```
+*Make sure that you have installed python3 and github with file path added to environment variables in Windows
+
+## 📖 How It Works
+HexMatch follows a 3-step verification process to ensure accuracy and speed:
+Walk: Scans your current working directory (and subdirectories), skipping system-critical folders.
+Size Match: Groups files with identical sizes. If a file's size is unique, it's ignored immediately.
+H3-Hashing: For files with matching sizes, it generates a hash based on the first 64KB and last 64KB. This detects duplicates (even in multi-GB videos) in milliseconds.
+
+## 💻 Usage
+Run the script from your terminal using various flags to control the behavior.
+1. Scan for duplicates
+To see what duplicates exist in your current folder:
+```bash
+python main.py --scan
 ```
 
-### 2. Move All to Trash
-The safest way to clean your drive. Moves every redundant copy to the Recycle Bin.
+2. Move ALL duplicates to Trash
+If you want to clean up everything quickly and safely:
 ```bash
-hexmatch --all --remove
+python main.py --all --remove
 ```
 
-### 3. Selective Permanent Deletion 
-Target specific files (by the numbers shown in --scan) for immediate, permanent removal.
+3. Permanently delete specific duplicates
+If you ran a scan and saw that items #1 and #3 are junk:
 ```bash
-hexmatch --select 1 3 5 --delete
+python main.py --select 1 3 --delete
 ```
+*This permanently deletes files. Use with caution!
 
-## 📖 Command Options
+## Argument Reference
+Flag	Short	Description
+--scan	-sc	Scans and lists duplicate groups found.
+--all	-a	Targets all identified duplicates (excluding the original).
+--select	-s	Manually choose which duplicates to target (e.g., -s 1 4 5).
+--remove	-r	Action: Move targeted files to Trash/Recycle Bin.
+--delete	-d	Action: Permanently delete targeted files.
 
-| Flag | Long Name | Description |
-| :--- | :--- | :--- |
-| `-sc` | `--scan` | Scans the directory and displays found duplicates. |
-| `-a` | `--all` | Targets **all** redundant copies found. |
-| `-s` | `--select` | Targets specific files by index (e.g., `-s 1 4`). |
-| `-r` | `--remove` | **Action:** Sends targeted files to the Trash/Recycle Bin. |
-| `-d` | `--delete` | **Action:** Permanently deletes targeted files (caution!). |
+## ⚠️ Disclaimer
+Use with caution. While the tool includes a "skip list" for system directories, always ensure you have backups before performing permanent deletions (-d). The author is not responsible for accidental data loss.
 
+## ⚖️ License
 
-## 🛡 License
-Distributed under the MIT License. See LICENSE for more information.
-
-
+This project is licensed under the [MIT License](https://opensource.org). 
