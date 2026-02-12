@@ -1,0 +1,15 @@
+# Add specific directories you want HexMatch to skip.
+
+Windows
+$Recycle.Bin
+System Volume Information
+ProgramData
+Program Files
+Program Files (x86)
+System
+Riot Games
+XboxGames
+.git
+node_modules
+__pycache__
+.vscode

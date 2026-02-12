@@ -45,25 +45,26 @@ def hash_generator(size_map):
 
 
 def walk_dir():
+    # setup path
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(script_dir, "config.txt")
     target_path = os.getcwd()
     all_file_paths = []
 
-    skip_list = {
-        "Windows",
-        "$Recycle.Bin",
-        "System Volume Information",
-        "ProgramData",
-        "Program Files",
-        "Program Files (x86)",
-        "System",
-        "Riot Games",
-        "XboxGames",
-        ".git",
-        "node_modules",
-        "__pycache__",
-        ".vscode",
-    }
+    # open skip list from config.txt
+    try:
+        with open(config_path, "r") as f:
+            skip_list = {
+                line.strip()
+                for line in f
+                if line.strip() and not line.strip().startswith("#")
+            }
 
+    except FileNotFoundError:
+        print("config.txt not found, skipping nothing...")
+        skip_list = set()
+
+    # walk the directory
     for root, dirs, files in os.walk(target_path):
         dirs[:] = [d for d in dirs if d not in skip_list and not d.startswith(".")]
 
@@ -74,6 +75,7 @@ def walk_dir():
             all_file_paths.append(full_path)
             print(f"\rCollected {len(all_file_paths)} files...", end="")
 
+    # filter and hash
     print("\nFiltering by size...")
     size_map = compare_file_size(all_file_paths)
     if not size_map:
@@ -103,14 +105,12 @@ def display_duplicates(duplicates):
         number += 1
         for item in value:
             file_name.append(os.path.basename(item))
-        #           split_item = item.split('/')
-        #           file_name.append(split_item[-1])
         print(f"  {number}. {file_name[0]} ({len(file_name)} duplicates)")
     return duplicates
 
 
 def grab_duplicates(duplicates):
-    # return a list of copies of a file exept the original file
+    # returns a list of copies of a file exept the original file
     duplicate_files = []
     for value in duplicates.values():
         for path in value[1:]:
@@ -119,7 +119,7 @@ def grab_duplicates(duplicates):
 
 
 def select_duplicates(duplicate_files, selected_item):
-    # return a list of selected items from the duplicate_files list
+    # returns a list of selected items from the duplicate_files list
     selected = []
     for number in selected_item:
         index = number - 1
