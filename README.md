@@ -15,7 +15,7 @@ HexMatch is a lightweight Python CLI tool designed to hunt down and eliminate du
 Ensure you have Python 3.10+ and git installed. To install HexMatch globally on your system:
 
 ```bash
-git clone https://github.com/thisrepo/
+git clone https://github.com/jayricmaning/HexMatch.git
 cd hexmatch
 pip install .
 ```
