@@ -13,13 +13,13 @@ dependencies = [
     "xxhash>=3.0.0",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-packages = {find = {where = ["src"]}} 
-
 [project.scripts]
 hexmatch = "main:main"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["main", "functions"]
+
 [tool.uv]
-python = "3.13t"
+python-preference = "managed"
 environments = ["PYTHON_GIL=0"]
