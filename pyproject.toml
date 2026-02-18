@@ -15,10 +15,11 @@ dependencies = [
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["main", "functions"]
+packages = {find = {where = ["src"]}} 
 
 [project.scripts]
 hexmatch = "main:main"
 
 [tool.uv]
 python = "3.13t"
+environments = ["PYTHON_GIL=0"]
