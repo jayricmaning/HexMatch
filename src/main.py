@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import os
 import argparse
 import sys
 import json
@@ -16,10 +16,18 @@ from functions import (
 
 CACHE_FILE = Path.home() / ".hexmatch_cache.json"
 
+if hasattr(sys, "_is_gil_enabled"):
+    os.environ["PYTHON_GIL"] = "0"
+
 
 def main():
     print("Starting Twin-File Detective...")
     print(f"Is GIL active? {getattr(sys, '_is_gil_enabled', lambda: True)()}")
+    if hasattr(sys, "_is_gil_enabled") and sys._is_gil_enabled():
+        print("⚠️ WARNING: Running with GIL enabled. Parallel hashing will be slower.")
+        print(
+            "To fix this, run with: $env:PYTHON_GIL=0 (Windows) or PYTHON_GIL=0 (Linux/Mac)"
+        )
 
     parser = argparse.ArgumentParser(
         description="Twin-File-Detective: A tool for finding and deleting copies of files"
