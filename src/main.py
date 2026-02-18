@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
+import sys
+import json
+from pathlib import Path
 from functions import (
     walk_dir,
     find_duplicate,
@@ -11,9 +14,12 @@ from functions import (
     delete_duplicates,
 )
 
+CACHE_FILE = Path.home() / ".hexmatch_cache.json"
+
 
 def main():
     print("Starting Twin-File Detective...")
+    print(f"Is GIL active? {getattr(sys, '_is_gil_enabled', lambda: True)()}")
 
     parser = argparse.ArgumentParser(
         description="Twin-File-Detective: A tool for finding and deleting copies of files"
@@ -42,12 +48,25 @@ def main():
     )
 
     args = parser.parse_args()
-    data_map = walk_dir()
-    twins = find_duplicate(data_map)
-    all_candidates = grab_duplicates(twins)
+    all_candidates = None
 
-    if not twins:
-        print("no duplicates were found")
+    if (args.delete or args.remove) and not args.scan:
+        if CACHE_FILE.exist():
+            with open(CACHE_FILE, "r") as f:
+                all_candidates = json.load(f)
+                print("Using cached results...")
+
+    if all_candidates is None:
+        print("Scanning directory (this may take a while)...")
+        data_map = walk_dir()
+        twins = find_duplicate(data_map)
+        all_candidates = grab_duplicates(twins)
+
+        with open(CACHE_FILE, "w") as f:
+            json.dump(all_candidates, f)
+
+    if not all_candidates:
+        print("No duplicates found.")
         return
 
     if args.scan:

@@ -1,7 +1,9 @@
 import os
 import xxhash
+from pathlib import Path
 from send2trash import send2trash
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 
 
 def compare_file_size(file_paths):
@@ -16,38 +18,45 @@ def compare_file_size(file_paths):
     return {size: paths for size, paths in size_map.items() if len(paths) > 1}
 
 
+def hash_single_file(path):
+    chunk_size = 65536
+    h = xxhash.xxh3_64()
+    try:
+        file_size = os.path.getsize(path)
+        with open(path, "rb") as f:
+            # Read Head
+            h.update(f.read(chunk_size))
+            # Read Tail
+            if file_size > chunk_size:
+                f.seek(-chunk_size, os.SEEK_END)
+                h.update(f.read(chunk_size))
+        return h.hexdigest(), path
+    except (OSError, PermissionError):
+        return None
+
+
 def hash_generator(size_map):
+    # Flatten the size_map into a single list of paths to process
+    all_paths = [path for path_list in size_map.values() for path in path_list]
     hashes_to_files = defaultdict(list)
-    chunk_size = 65536  # 64KB
 
-    for path_list in size_map.values():
-        for path in path_list:
-            h = xxhash.xxh3_64()
-            try:
-                file_size = os.path.getsize(path)
-                with open(path, "rb") as f:
-                    # Read the Head (First 64KB)
-                    h.update(f.read(chunk_size))
+    # ThreadPoolExecutor provides true parallelism in Python 3.13t (no-GIL)
+    with ThreadPoolExecutor() as executor:
+        # map() runs the helper function across all paths using all available CPU cores
+        results = executor.map(hash_single_file, all_paths)
 
-                    # Read the Tail (Last 64KB)
-                    if file_size > chunk_size:
-                        f.seek(-chunk_size, os.SEEK_END)
-                        h.update(f.read(chunk_size))
-
-                file_hash = h.hexdigest()
-                hashes_to_files[file_hash].append(path)
-
-            except (OSError, PermissionError) as e:
-                print(f"Skipping {os.path.basename(path)}: {e}")
-                continue
+    for result in results:
+        if result:
+            file_hash, path = result
+            hashes_to_files[file_hash].append(path)
 
     return {h: paths for h, paths in hashes_to_files.items() if len(paths) > 1}
 
 
 def walk_dir():
     # setup path
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(script_dir, "config.txt")
+    project_root = Path(__file__).resolve().parent.parent
+    config_path = project_root / "config.txt"
     target_path = os.getcwd()
     all_file_paths = []
 

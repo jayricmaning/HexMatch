@@ -7,7 +7,7 @@ name = "hexmatch"
 version = "1.0.0"
 description = "A tool for finding copies of files using its hex values"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13" 
 dependencies = [
     "send2trash>=2.1.0",
     "xxhash>=3.0.0",
@@ -19,3 +19,6 @@ py-modules = ["main", "functions"]
 
 [project.scripts]
 hexmatch = "main:main"
+
+[tool.uv]
+python = "3.13t"
